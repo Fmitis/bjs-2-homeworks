@@ -1,7 +1,13 @@
+'use strict'
+
 function compareArrays(arr1, arr2) {
   let result;
-
-  const compareArrays = (arr1, arr2) => arr1.length === arr2.length && arr1.every((item, idx) => item === arr2[idx]);
+  if (arr1.length != arr2.length) {
+    return false;
+  }
+  else {
+    return arr1.every((value, index) => value === arr2[index]);
+  }
 
   return result; // boolean
 }
