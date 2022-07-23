@@ -1,27 +1,25 @@
 function cachingDecoratorNew(func) {
-  function cachingDecoratorNew(func) {
-    let cache = [];
+  let cashe = [];
+  let counter = 0;
 
-    function wrapper(...args) {
-      const hash = args.join(',') // получаем правильный хэш
-      let idx = cache.findIndex((cacheRecord) => cacheRecord.hash === hash); // ищем элемент, хэш которого равен нашему хэшу
-      if (idx !== -1) { // если элемент не найден
-        console.log("Из кэша: " + cache[idx].result); // индекс нам известен, по индексу в массиве лежит объект, как получить нужное значение?
-        return "Из кэша: " + cache[idx].result;
-      }
+  function wrapper(...args) {
 
-      let result = func.call(this, ...args); // в кэше результата нет - придётся считать
-      cache.push({ hash, result }); // добавляем элемент с правильной структурой
-      if (cache.length > 5) {
-        cache.push({ hash, result }); // если слишком много элементов в кэше надо удалить самый старый (первый) 
-      }
-      console.log("Вычисляем: " + result);
-      return "Вычисляем: " + result;
+    const hash = args.join(',');
+
+    if (hash in cashe) {
+      return "Из кэша: " + cashe[hash];
     }
-    return wrapper;
-
+    if (counter >= 5) {
+      delete cashe[Object.keys(cashe)[0]];
+    }
+    counter++;
+    cashe[hash] = func(...args);
+    return "Вычисляем: " + cashe[hash];
   }
+
+  return wrapper;
 }
+
 
 
 function debounceDecoratorNew(func, ms) {
